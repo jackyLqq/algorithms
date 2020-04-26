@@ -3,6 +3,8 @@ package com.liuqiqi.sort;
 import com.liuqiqi.common.BaseOrder;
 
 /**
+ * 选择排序
+ *
  * @author liuqiqi
  * @date 2020/3/22 22:11
  */

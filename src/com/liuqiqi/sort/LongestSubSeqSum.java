@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
+ * 最大子数组
  * @author liuqiqi
  * @date 2020/4/24 15:02
  */

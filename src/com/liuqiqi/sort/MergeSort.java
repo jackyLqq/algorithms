@@ -6,44 +6,75 @@ import java.lang.reflect.Array;
 
 /**
  * @author liuqiqi
- * @date 2020/4/4 20:51
+ * @date 2020/4/23 18:17
  */
 public class MergeSort extends BaseOrder {
-    private int mid;
+    @Override
+    public void sort(Comparable[] a) {
 
-    public MergeSort(int mid) {
-        this.mid = mid;
+        doSort(a);
+        System.out.println(this.isSort(a));
+        this.show(a);
     }
 
-    @Override
-    public void sort(Comparable[] data) {
-        if(mid < 0 || mid > data.length -1) {
-            throw new IllegalArgumentException();
+    private void doSort(Comparable[] a) {
+        /*递归结束条件*/
+        if (a.length == 1) {
+            return;
         }
-        Class<? extends Comparable[]> arrayClass = data.getClass();
+        /*创建两个数组，中间分开，一次存储a的数据*/
+        int begin = 0;
+        int mid = a.length / 2;
+        int end = a.length;
+        Class<? extends Comparable[]> arrayClass = a.getClass();
 
         Class<?> baseClass = arrayClass.getComponentType();
-        Comparable[] dataTemp = (Comparable[]) Array.newInstance(baseClass, data.length);
-        int firstBegin = 0;
-        int lastBegin = mid + 1;
-        for (int i = 0; i < data.length; i++) {
-            if (firstBegin > mid) {
-                dataTemp[i] = data[lastBegin++];
-            } else if (lastBegin > data.length - 1) {
-                dataTemp[i] = data[firstBegin++];
-            } else if (less(data[firstBegin], data[lastBegin])) {
-                dataTemp[i] = data[firstBegin++];
-            } else {
-                dataTemp[i] = data[lastBegin++];
-            }
+        Comparable[] left = (Comparable[]) Array.newInstance(baseClass, mid);
+        Comparable[] right = (Comparable[]) Array.newInstance(baseClass, end - mid);
+        /*数组赋值*/
+        for (int i = begin; i < mid; i++) {
+            left[i] = a[i];
         }
-        System.out.println(this.isSort(dataTemp));
-        this.show(dataTemp);
+
+        for (int i = mid; i < end; i++) {
+            right[i - mid] = a[i];
+        }
+
+        doSort(left);
+
+        doSort(right);
+
+        doMerge(a, left, right);
+    }
+
+    private void doMerge(Comparable[] dataTemp, Comparable[] left, Comparable[] right) {
+
+        int l = 0;
+        int r = 0;
+        for (int i = 0; i < dataTemp.length; i++) {
+            if (r == right.length) {
+                dataTemp[i] = left[l++];
+                continue;
+            }
+            if (l == left.length) {
+                dataTemp[i] = right[r++];
+                continue;
+            }
+            if (less(left[l], right[r])) {
+                dataTemp[i] = left[l++];
+
+            } else {
+                dataTemp[i] = right[r++];
+            }
+
+
+        }
+
     }
 
     public static void main(String[] args) {
-        Integer[] data = new Integer[]{1,33,67,89,112,22,33,37,66,88,1111};
-        MergeSort ms = new MergeSort(4);
-        ms.sort(data);
+        MergeSort mergeSort2 = new MergeSort();
+        Integer[] data = mergeSort2.prepareData();
+        mergeSort2.sort(data);
     }
 }
