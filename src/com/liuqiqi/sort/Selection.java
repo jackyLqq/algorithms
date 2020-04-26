@@ -1,7 +1,5 @@
 package com.liuqiqi.sort;
 
-import com.liuqiqi.common.BaseOrder;
-
 /**
  * 选择排序
  *
@@ -12,7 +10,7 @@ public class Selection extends BaseOrder {
 
 
     @Override
-    public void sort(Comparable[] data) {
+    public void sort(Integer[] data) {
 
         for (int i = 0; i < data.length; i++) {
             for (int j = i + 1; j < data.length; j++) {

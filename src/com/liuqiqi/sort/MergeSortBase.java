@@ -1,14 +1,12 @@
 package com.liuqiqi.sort;
 
-import com.liuqiqi.common.BaseOrder;
-
 import java.lang.reflect.Array;
 
 /**
  * @author liuqiqi
  * @date 2020/4/4 20:51
  */
-public class MergeSortBase extends BaseOrder {
+public class MergeSortBase extends BaseReturnOrder {
     private int mid;
 
     public MergeSortBase(int mid) {
@@ -16,14 +14,14 @@ public class MergeSortBase extends BaseOrder {
     }
 
     @Override
-    public void sort(Comparable[] data) {
-        if(mid < 0 || mid > data.length -1) {
+    public Integer[] sort(Integer[] data) {
+        if (mid < 0 || mid > data.length - 1) {
             throw new IllegalArgumentException();
         }
-        Class<? extends Comparable[]> arrayClass = data.getClass();
+        Class<? extends Integer[]> arrayClass = data.getClass();
 
         Class<?> baseClass = arrayClass.getComponentType();
-        Comparable[] dataTemp = (Comparable[]) Array.newInstance(baseClass, data.length);
+        Integer[] dataTemp = (Integer[]) Array.newInstance(baseClass, data.length);
         int firstBegin = 0;
         int lastBegin = mid + 1;
         for (int i = 0; i < data.length; i++) {
@@ -37,13 +35,14 @@ public class MergeSortBase extends BaseOrder {
                 dataTemp[i] = data[lastBegin++];
             }
         }
-        System.out.println(this.isSort(dataTemp));
-        this.show(dataTemp);
+        return dataTemp;
     }
 
     public static void main(String[] args) {
-        Integer[] data = new Integer[]{1,33,67,89,112,22,33,37,66,88,1111};
+        Integer[] data = new Integer[]{1, 33, 67, 89, 112, 22, 33, 37, 66, 88, 1111};
         MergeSortBase ms = new MergeSortBase(4);
-        ms.sort(data);
+        Integer[] sort = ms.sort(data);
+        System.out.println(ms.isSort(sort));
+        ms.show(sort);
     }
 }

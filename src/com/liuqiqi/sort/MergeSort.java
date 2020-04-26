@@ -1,7 +1,5 @@
 package com.liuqiqi.sort;
 
-import com.liuqiqi.common.BaseOrder;
-
 import java.lang.reflect.Array;
 
 /**
@@ -10,14 +8,11 @@ import java.lang.reflect.Array;
  */
 public class MergeSort extends BaseOrder {
     @Override
-    public void sort(Comparable[] a) {
-
+    public void sort(Integer[] a) {
         doSort(a);
-        System.out.println(this.isSort(a));
-        this.show(a);
     }
 
-    private void doSort(Comparable[] a) {
+    private void doSort(Integer[] a) {
         /*递归结束条件*/
         if (a.length == 1) {
             return;
@@ -26,11 +21,11 @@ public class MergeSort extends BaseOrder {
         int begin = 0;
         int mid = a.length / 2;
         int end = a.length;
-        Class<? extends Comparable[]> arrayClass = a.getClass();
+        Class<? extends Integer[]> arrayClass = a.getClass();
 
         Class<?> baseClass = arrayClass.getComponentType();
-        Comparable[] left = (Comparable[]) Array.newInstance(baseClass, mid);
-        Comparable[] right = (Comparable[]) Array.newInstance(baseClass, end - mid);
+        Integer[] left = (Integer[]) Array.newInstance(baseClass, mid);
+        Integer[] right = (Integer[]) Array.newInstance(baseClass, end - mid);
         /*数组赋值*/
         for (int i = begin; i < mid; i++) {
             left[i] = a[i];
@@ -47,7 +42,7 @@ public class MergeSort extends BaseOrder {
         doMerge(a, left, right);
     }
 
-    private void doMerge(Comparable[] dataTemp, Comparable[] left, Comparable[] right) {
+    private void doMerge(Integer[] dataTemp, Integer[] left, Integer[] right) {
 
         int l = 0;
         int r = 0;
@@ -76,5 +71,7 @@ public class MergeSort extends BaseOrder {
         MergeSort mergeSort2 = new MergeSort();
         Integer[] data = mergeSort2.prepareData();
         mergeSort2.sort(data);
+        System.out.println(mergeSort2.isSort(data));
+        mergeSort2.show(data);
     }
 }

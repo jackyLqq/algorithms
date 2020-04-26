@@ -1,32 +1,29 @@
-package com.liuqiqi.common;
+package com.liuqiqi.sort;
 
 import java.util.Arrays;
 import java.util.Random;
 
 /**
  * @author liuqiqi
- * @date 2020/3/22 22:15
+ * @date 2020/4/26 13:50
  */
-public abstract class BaseOrder {
-
-    public abstract void sort(Comparable[] a);
-
-    public boolean less(Comparable a,
-                        Comparable b) {
+public abstract class Order {
+    public boolean less(Integer a,
+                        Integer b) {
         return a.compareTo(b) < 0;
     }
 
-    public void exchange(Comparable[] a, int i, int j) {
-        Comparable t = a[i];
+    public void exchange(Integer[] a, int i, int j) {
+        Integer t = a[i];
         a[i] = a[j];
         a[j] = t;
     }
 
-    public void show(Comparable[] a) {
+    public void show(Integer[] a) {
         System.out.println(Arrays.toString(a));
     }
 
-    public boolean isSort(Comparable[] a) {
+    public boolean isSort(Integer[] a) {
         for (int i = 0; i < a.length - 1; i++) {
             if (less(a[i + 1], a[i])) {
                 return false;
@@ -43,5 +40,4 @@ public abstract class BaseOrder {
         }
         return data;
     }
-
 }

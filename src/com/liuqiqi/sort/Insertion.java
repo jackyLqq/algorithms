@@ -1,7 +1,5 @@
 package com.liuqiqi.sort;
 
-import com.liuqiqi.common.BaseOrder;
-
 /**
  * 插入排序
  *
@@ -11,7 +9,7 @@ import com.liuqiqi.common.BaseOrder;
 public class Insertion extends BaseOrder {
 
     @Override
-    public void sort(Comparable[] a) {
+    public void sort(Integer[] a) {
         for (int i = 1; i < a.length; i++) {
             for (int j = i; j > 0 && less(a[j], a[j - 1]); j--) {
                 exchange(a, j, j - 1);

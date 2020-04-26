@@ -1,7 +1,5 @@
 package com.liuqiqi.sort;
 
-import com.liuqiqi.common.BaseOrder;
-
 /**
  * 希尔排序
  *
@@ -11,7 +9,7 @@ import com.liuqiqi.common.BaseOrder;
 public class ShellSort extends BaseOrder {
 
     @Override
-    public void sort(Comparable[] a) {
+    public void sort(Integer[] a) {
         int internalNum = 1;
         while (internalNum < a.length / 3) {
             internalNum = internalNum * 3 + 1;
