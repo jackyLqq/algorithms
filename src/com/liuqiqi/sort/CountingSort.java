@@ -1,5 +1,7 @@
 package com.liuqiqi.sort;
 
+import java.util.Arrays;
+
 /**
  * 计数排序
  *
@@ -18,9 +20,7 @@ public class CountingSort extends BaseReturnOrder {
     public Integer[] sort(Integer[] a) {
         Integer[] indexArray = new Integer[maxNum];
         Integer[] result = new Integer[a.length];
-        for (int e = 0; e < indexArray.length; e++) {
-            indexArray[e] = 0;
-        }
+        Arrays.fill(indexArray, 0);
         /*indexArray存储的次数赋值*/
         for (int f = 0; f < a.length; f++) {
             indexArray[a[f]]++;
