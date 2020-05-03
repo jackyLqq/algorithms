@@ -32,6 +32,7 @@ public class CountingSort extends BaseReturnOrder {
         /*赋值,注意下标*/
         for (int j = 0; j < a.length; j++) {
             result[indexArray[a[j]] - 1] = a[j];
+            indexArray[a[j]]--;
         }
         return result;
     }
