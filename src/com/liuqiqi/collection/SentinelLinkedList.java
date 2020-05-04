@@ -3,30 +3,27 @@ package com.liuqiqi.collection;
 import java.util.Random;
 
 /**
- * 链表
+ * 哨兵实现的链表
  *
  * @author liuqiqi
- * @date 2020/5/4 15:33
+ * @date 2020/5/4 18:58
  */
-public class LinkedList<T> implements List<T> {
-
+public class SentinelLinkedList<T> implements List<T> {
     private int size;
 
-    private Node<T> head;
-
-    private Node<T> tail;
+    private Node<T> sentinel = new Node<>(null, null, null);
 
 
     @Override
     public void add(T item) {
-        Node<T> node = new Node<>(tail, item, null);
-        if (head == null) {
-            head = node;
+        Node<T> node = new Node<>(sentinel.prev, item, null);
+        if (sentinel.next == null) {
+            sentinel.next = node;
         }
-        if (tail != null) {
-            tail.next = node;
+        if (sentinel.prev != null) {
+            sentinel.prev.next = node;
         }
-        tail = node;
+        sentinel.prev = node;
         size++;
     }
 
@@ -41,7 +38,7 @@ public class LinkedList<T> implements List<T> {
             Node<T> prev = next.prev;
             Node<T> tNode = new Node<>(prev, item, next);
             if (prev == null) {
-                head = tNode;
+                sentinel.next = tNode;
             } else {
                 prev.next = tNode;
             }
@@ -57,7 +54,7 @@ public class LinkedList<T> implements List<T> {
             throw new IllegalArgumentException();
         }
         /*寻找位置*/
-        Node<T> next = head;
+        Node<T> next = sentinel.next;
         while (index > 0) {
             next = next.next;
             index--;
@@ -69,7 +66,7 @@ public class LinkedList<T> implements List<T> {
     public boolean delete(T item) {
         /*寻找节点*/
         Node<T> node = this.getNode(item);
-        if(node == null) {
+        if (node == null) {
             return false;
         }
         deleteNode(node);
@@ -78,16 +75,8 @@ public class LinkedList<T> implements List<T> {
     }
 
     private void deleteNode(Node<T> delNode) {
-        if (delNode.prev == null) {
-            head = delNode.next;
-        } else {
-            delNode.prev.next = delNode.next;
-        }
-        if (delNode.next == null) {
-            tail = delNode.prev;
-        } else {
-            delNode.next.prev = delNode.prev;
-        }
+        delNode.prev.next = delNode.next;
+        delNode.next.prev = delNode.prev;
     }
 
     @Override
@@ -112,7 +101,7 @@ public class LinkedList<T> implements List<T> {
     }
 
     private Node<T> getNode(T item) {
-        Node<T> node = head;
+        Node<T> node = sentinel.next;
         while (node != null && !node.data.equals(item)) {
             node = node.next;
         }
@@ -127,7 +116,7 @@ public class LinkedList<T> implements List<T> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        Node<T> node = head;
+        Node<T> node = sentinel.next;
         while (node != null) {
             sb.append(node.data).append(",");
             node = node.next;
@@ -150,7 +139,7 @@ public class LinkedList<T> implements List<T> {
     }
 
     public static void main(String[] args) {
-        List<Integer> list = new LinkedList<>();
+        List<Integer> list = new SentinelLinkedList<>();
 
         Random random = new Random();
         Integer[] data = new Integer[]{933,
@@ -179,4 +168,5 @@ public class LinkedList<T> implements List<T> {
         System.out.println("获取索引为2元素" + list.get(2));
         System.out.println("获取为520元素" + list.get(new Integer(520)));
     }
+
 }
