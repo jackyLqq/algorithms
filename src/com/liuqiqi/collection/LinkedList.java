@@ -67,17 +67,14 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public boolean delete(T item) {
-        /*寻找删除位置*/
-        Node<T> delNode = head;
-        while (delNode != null) {
-            if (delNode.data.equals(item)) {
-                deleteNode(delNode);
-                size--;
-                return true;
-            }
-            delNode = delNode.next;
+        /*寻找节点*/
+        Node<T> node = this.getNode(item);
+        if(node == null) {
+            return false;
         }
-        return false;
+        deleteNode(node);
+        size--;
+        return true;
     }
 
     private void deleteNode(Node<T> delNode) {
@@ -110,11 +107,16 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public T get(T item) {
+        Node<T> node = getNode(item);
+        return node.data;
+    }
+
+    private Node<T> getNode(T item) {
         Node<T> node = head;
         while (node != null && !node.data.equals(item)) {
             node = node.next;
         }
-        return node.data;
+        return node;
     }
 
     @Override
