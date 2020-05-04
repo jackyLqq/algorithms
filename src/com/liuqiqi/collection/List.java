@@ -16,6 +16,8 @@ public interface List<T> {
 
     T get(int index);
 
+    T get(T item);
+
     int size();
 
 }

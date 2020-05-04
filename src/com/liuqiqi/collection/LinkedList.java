@@ -109,6 +109,15 @@ public class LinkedList<T> implements List<T> {
     }
 
     @Override
+    public T get(T item) {
+        Node<T> node = head;
+        while (node != null && !node.data.equals(item)) {
+            node = node.next;
+        }
+        return node.data;
+    }
+
+    @Override
     public int size() {
         return size;
     }
@@ -165,5 +174,7 @@ public class LinkedList<T> implements List<T> {
         System.out.println("删除索引2元素后" + linkedList.toString());
         linkedList.add(2, 666);
         System.out.println("新增索引2元素后" + linkedList.toString());
+        System.out.println("获取索引为2元素" + linkedList.get(2));
+        System.out.println("获取为520元素" + linkedList.get(new Integer(520)));
     }
 }
