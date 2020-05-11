@@ -86,8 +86,8 @@ public class ChainingHashTable<K, V> implements HashTable<K, V> {
      * @param loadFactor      负载因子
      */
     public ChainingHashTable(int initialCapacity, float loadFactor) {
-        if (initialCapacity < 0) {
-            throw new IllegalArgumentException("initialCapacity can not less than 0");
+        if (initialCapacity < 0 || loadFactor < 0 || loadFactor >= 1) {
+            throw new IllegalArgumentException("args error");
         }
         this.loadFactor = loadFactor;
         this.threshold = (int) (initialCapacity * loadFactor);
