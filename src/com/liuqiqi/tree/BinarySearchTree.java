@@ -215,6 +215,7 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
         /*直接删除节点*/
         if (node.left == null && node.right == null) {
             if (parent == null) {
+                /*直接删除根节点*/
                 root = null;
             } else {
                 node.parent = null;
@@ -229,8 +230,8 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
             /*左子节点为空，右子节点非空*/
             if (parent == null) {
                 root = node.right;
-
             } else {
+                node.parent = null;
                 if (parent.left == node) {
                     parent.left = node.right;
                 } else {
@@ -238,7 +239,6 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
                 }
             }
             node.right.parent = parent;
-            node.parent = null;
             node.right = null;
 
         } else if (node.right == null) {
@@ -246,6 +246,7 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
             if (parent == null) {
                 root = node.left;
             } else {
+                node.parent = null;
                 if (parent.left == node) {
                     parent.left = node.left;
                 } else {
@@ -253,14 +254,13 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
                 }
             }
             node.left.parent = parent;
-            node.parent = null;
             node.left = null;
 
         } else {
             /*存在双节点*/
             Node<K, V> successor = this.successor(node);
             if (successor.parent != node) {
-                /*删除后继元素，将后继元素的右节点插入后继节点的左子系欸但节点*/
+                /*将后继节点得子树连接到后继节点得父节点*/
                 Node<K, V> sP = successor.parent;
                 sP.left = successor.right;
                 if (successor.right != null) {
@@ -270,7 +270,7 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
             } else {
                 node.right = null;
             }
-
+            /*删除后继节点，将后继节点键和值替换到node*/
             successor.parent = null;
             successor.right = null;
             node.setVal(successor.getVal());
