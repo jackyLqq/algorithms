@@ -227,7 +227,7 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
             }
 
         } else if (node.left == null) {
-            /*左子节点为空，右子节点非空*/
+            /*左子节点为空，右子节点非空，将右子节点和父节点连接*/
             if (parent == null) {
                 root = node.right;
             } else {
@@ -242,7 +242,7 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
             node.right = null;
 
         } else if (node.right == null) {
-            /*处理右节点为空，左节点有元素的情况*/
+            /*处理右节点为空，左节点有元素的情况，将左子节点和父节点连接*/
             if (parent == null) {
                 root = node.left;
             } else {
@@ -260,7 +260,7 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
             /*存在双节点*/
             Node<K, V> successor = this.successor(node);
             if (successor.parent != node) {
-                /*将后继节点得子树连接到后继节点得父节点*/
+                /*将后继节点的右子树（不存在左子树），子树连接到后继节点得父节点*/
                 Node<K, V> sP = successor.parent;
                 sP.left = successor.right;
                 if (successor.right != null) {
@@ -270,7 +270,7 @@ public class BinarySearchTree<K, V> implements Tree<K, V> {
             } else {
                 node.right = null;
             }
-            /*删除后继节点，将后继节点键和值替换到node*/
+            /*删除后继节点，将后继节点键和值更新到到node（省去复杂的引用维护）*/
             successor.parent = null;
             successor.right = null;
             node.setVal(successor.getVal());
