@@ -37,15 +37,23 @@ public class BinarySearchTree<K, V> extends AbstractBinarySearchTree<K, V> imple
     }
 
     @Override
+    void plusSize() {
+        size++;
+    }
+
+    @Override
+    void reduceSize() {
+        size--;
+    }
+
+    @Override
     void setRoot(Node<K, V> node) {
         this.root = node;
     }
 
     @Override
     public V delete(K k) {
-        V val = super.delete(k);
-        size--;
-        return val;
+        return super.delete(k);
     }
 
     @Override
@@ -56,7 +64,6 @@ public class BinarySearchTree<K, V> extends AbstractBinarySearchTree<K, V> imple
     @Override
     public void put(K key, V value) {
         super.put(key, value);
-        size++;
     }
 
     public static void main(String[] args) {

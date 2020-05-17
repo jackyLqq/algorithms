@@ -17,6 +17,10 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
 
     abstract Comparator<? super K> getComparator();
 
+    abstract void plusSize();
+
+    abstract void reduceSize();
+
     @Override
     public V get(K key) {
         if (key == null) {
@@ -64,6 +68,9 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
     @Override
     public Node<K, V> getMin() {
         Node<K, V> tmp = getRoot();
+        if (this.getRoot() == null) {
+            return null;
+        }
         return getMinNode(tmp);
     }
 
@@ -157,8 +164,12 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
     @Override
     public V delete(K k) {
         Node<K, V> node = getNode(k);
+        if (node == null) {
+            return null;
+        }
         V val = node.val;
         deleteNode(node);
+        reduceSize();
         return val;
     }
 
@@ -211,22 +222,11 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
         } else {
             /*存在双节点*/
             Node<K, V> successor = this.successor(node);
-            if (successor.parent != node) {
-                /*将后继节点的右子树（不存在左子树），子树连接到后继节点得父节点*/
-                Node<K, V> sP = successor.parent;
-                sP.left = successor.right;
-                if (successor.right != null) {
-                    successor.right.parent = sP;
-                }
-
-            } else {
-                node.right = null;
-            }
-            /*删除后继节点，将后继节点键和值更新到到node（省去复杂的引用维护）*/
-            successor.parent = null;
-            successor.right = null;
-            node.setVal(successor.getVal());
-            node.setKey(successor.getKey());
+            K key = successor.key;
+            V val = successor.val;
+            deleteNode(successor);
+            node.setVal(val);
+            node.setKey(key);
         }
     }
 
@@ -239,9 +239,10 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
         putNode(node);
     }
 
-    private void putNode(Node<K, V> node) {
+    protected void putNode(Node<K, V> node) {
         if (getRoot() == null) {
             setRoot(node);
+            plusSize();
             return;
         }
         Node<K, V> tmp = getRoot();
@@ -282,9 +283,11 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
         if (cmp < 0) {
             tmpParent.left = node;
             node.parent = tmpParent;
+            plusSize();
         } else if (cmp > 0) {
             tmpParent.right = node;
             node.parent = tmpParent;
+            plusSize();
         }
     }
 
