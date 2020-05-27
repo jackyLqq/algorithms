@@ -231,19 +231,19 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
     }
 
     @Override
-    public void put(K key, V value) {
+    public V put(K key, V value) {
         if (key == null) {
             throw new IllegalArgumentException("key can not null");
         }
         Node<K, V> node = new Node<>(key, value);
-        putNode(node);
+        return putNode(node);
     }
 
-    protected void putNode(Node<K, V> node) {
+    protected V putNode(Node<K, V> node) {
         if (getRoot() == null) {
             setRoot(node);
             plusSize();
-            return;
+            return null;
         }
         Node<K, V> tmp = getRoot();
         Node<K, V> tmpParent = null;
@@ -259,8 +259,9 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
                 } else if (cmp > 0) {
                     tmp = tmp.right;
                 } else {
+                    V oldVal = tmp.val;
                     tmp.setVal(node.val);
-                    break;
+                    return oldVal;
                 }
             }
 
@@ -275,8 +276,9 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
                 } else if (cmp > 0) {
                     tmp = tmp.right;
                 } else {
+                    V oldVal = tmp.val;
                     tmp.setVal(node.val);
-                    break;
+                    return oldVal;
                 }
             }
         }
@@ -289,6 +291,7 @@ public abstract class AbstractBinarySearchTree<K, V> implements Tree<K, V> {
             node.parent = tmpParent;
             plusSize();
         }
+        return null;
     }
 
 

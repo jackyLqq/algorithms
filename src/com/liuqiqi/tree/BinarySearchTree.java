@@ -62,8 +62,8 @@ public class BinarySearchTree<K, V> extends AbstractBinarySearchTree<K, V> imple
     }
 
     @Override
-    public void put(K key, V value) {
-        super.put(key, value);
+    public V put(K key, V value) {
+        return super.put(key, value);
     }
 
     public static void main(String[] args) {

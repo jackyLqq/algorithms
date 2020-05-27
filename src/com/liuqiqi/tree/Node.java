@@ -10,8 +10,8 @@ public class Node<K, V> {
 
     K key;
     V val;
-    /*平衡因子，-1，0，1，-2或者2则需要进行旋转*/
-    int factor;
+    /*avl树 平衡因子，-1，0，1，-2或者2则需要进行旋转， 红黑树 0：红色色，1：黑色*/
+    int mark;
     Node<K, V> left;
     Node<K, V> right;
     Node<K, V> parent;
@@ -21,10 +21,10 @@ public class Node<K, V> {
         this.val = val;
     }
 
-    public Node(K key, V val, int factor) {
+    public Node(K key, V val, int mark) {
         this.key = key;
         this.val = val;
-        this.factor = factor;
+        this.mark = mark;
     }
 
     public K getKey() {

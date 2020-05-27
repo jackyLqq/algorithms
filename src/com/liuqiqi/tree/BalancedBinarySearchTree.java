@@ -58,12 +58,12 @@ public class BalancedBinarySearchTree<K, V> extends AbstractBinarySearchTree<K, 
     }
 
     @Override
-    public void put(K key, V value) {
+    public V put(K key, V value) {
         if (key == null) {
             throw new IllegalArgumentException("key can not null");
         }
         Node<K, V> node = new Node<>(key, value, 0);
-        super.putNode(node);
+        V oldVal = super.putNode(node);
 
         /*检查或者更新factor,rotateFlag*/
         Node<K, V> ancestorNode = checkOrUpdateFactorOfPut(node);
@@ -72,7 +72,7 @@ public class BalancedBinarySearchTree<K, V> extends AbstractBinarySearchTree<K, 
             /*先更新factor再旋转*/
             rotateOfPut(node, ancestorNode);
         }
-
+        return oldVal;
     }
 
     @Override
@@ -98,16 +98,16 @@ public class BalancedBinarySearchTree<K, V> extends AbstractBinarySearchTree<K, 
         /*直接删除节点*/
         if (node.left == null || node.right == null) {
             while (parent != null) {
-                int parentFactor = parent.factor;
+                int parentFactor = parent.mark;
                 if (node == parent.left) {
-                    parent.factor = parent.factor - 1;
-                    if (parent.factor == -2) {
+                    parent.mark = parent.mark - 1;
+                    if (parent.mark == -2) {
                         return parent;
                     }
                 }
                 if (node == parent.right) {
-                    parent.factor = parent.factor + 1;
-                    if (parent.factor == 2) {
+                    parent.mark = parent.mark + 1;
+                    if (parent.mark == 2) {
                         return parent;
                     }
                 }
@@ -131,10 +131,10 @@ public class BalancedBinarySearchTree<K, V> extends AbstractBinarySearchTree<K, 
     private void updateFactorOfDelete(Node<K, V> node) {
         Node<K, V> parent = node.parent;
         while (parent != null) {
-            int parentFactor = parent.factor;
+            int parentFactor = parent.mark;
             if (node == parent.left) {
-                parent.factor = parent.factor - 1;
-                if (parent.factor == -2) {
+                parent.mark = parent.mark - 1;
+                if (parent.mark == -2) {
                     /*删除更新时遇到不平衡的节点继续进行旋转操作*/
                     deleteRotate(parent);
                     /*结束节点factor的更新，旋转后抵消*/
@@ -142,8 +142,8 @@ public class BalancedBinarySearchTree<K, V> extends AbstractBinarySearchTree<K, 
                 }
             }
             if (node == parent.right) {
-                parent.factor = parent.factor + 1;
-                if (parent.factor == 2) {
+                parent.mark = parent.mark + 1;
+                if (parent.mark == 2) {
                     /*删除更新时遇到不平衡的节点继续进行旋转操作*/
                     deleteRotate(parent);
                     /*结束节点factor的更新，旋转后抵消*/
@@ -162,38 +162,38 @@ public class BalancedBinarySearchTree<K, V> extends AbstractBinarySearchTree<K, 
     /*删除后的旋转*/
     private void deleteRotate(Node<K, V> node) {
         /*说明左子树较高*/
-        if (node.factor == 2) {
-            int leftFactor = node.left.factor;
+        if (node.mark == 2) {
+            int leftFactor = node.left.mark;
             if (leftFactor == 0 || leftFactor == 1) {
                 rRotate(node);
-                node.factor = height(node.left) - height(node.right);
-                node.parent.factor = height(node.parent.left) - height(node.parent.right);
+                node.mark = height(node.left) - height(node.right);
+                node.parent.mark = height(node.parent.left) - height(node.parent.right);
             } else {
                 /*左子节点factor为-1的时候需要先左旋再右旋*/
                 lRotate(node.left);
                 rRotate(node);
-                node.factor = height(node.left) - height(node.right);
-                node.parent.factor = height(node.parent.left) - height(node.parent.right);
-                node.parent.left.factor = height(node.parent.left.left) - height(node.parent.left.right);
+                node.mark = height(node.left) - height(node.right);
+                node.parent.mark = height(node.parent.left) - height(node.parent.right);
+                node.parent.left.mark = height(node.parent.left.left) - height(node.parent.left.right);
             }
             if (leftFactor != 0) {
                 /*旋转后，树高度肯定-1，因此要更新node.left祖先路径上的factor*/
                 updateFactorOfDelete(node.parent);
             }
-        } else if (node.factor == -2) {
+        } else if (node.mark == -2) {
             /*说明右子树较高*/
-            int rightFactor = node.right.factor;
+            int rightFactor = node.right.mark;
             if (rightFactor == 0 || rightFactor == -1) {
                 lRotate(node);
-                node.factor = height(node.left) - height(node.right);
-                node.parent.factor = height(node.parent.left) - height(node.parent.right);
+                node.mark = height(node.left) - height(node.right);
+                node.parent.mark = height(node.parent.left) - height(node.parent.right);
             } else {
                 /*左子节点factor为1的时候需要先左旋再右旋*/
                 rRotate(node.right);
                 lRotate(node);
-                node.factor = height(node.left) - height(node.right);
-                node.parent.factor = height(node.parent.left) - height(node.parent.right);
-                node.parent.right.factor = height(node.parent.right.left) - height(node.parent.right.right);
+                node.mark = height(node.left) - height(node.right);
+                node.parent.mark = height(node.parent.left) - height(node.parent.right);
+                node.parent.right.mark = height(node.parent.right.left) - height(node.parent.right.right);
             }
             if (rightFactor != 0) {
                 /*旋转后，树高度肯定-1，因此要更新node.right祖先路径上的factor*/
@@ -206,27 +206,27 @@ public class BalancedBinarySearchTree<K, V> extends AbstractBinarySearchTree<K, 
 
     private void rotateOfPut(Node<K, V> node, Node<K, V> ancestor) {
         /*左旋和右旋只修改移动的两个节点，ancestor和其父节点，而左右旋和右左旋则改变三个，也是移动的三个节点*/
-        if (ancestor.factor == -2 && judge(node, ancestor.right, ancestor.right.right)) {
+        if (ancestor.mark == -2 && judge(node, ancestor.right, ancestor.right.right)) {
             /*ancestor左旋*/
             lRotate(ancestor);
-        } else if (ancestor.factor == 2 && judge(node, ancestor.left, ancestor.left.left)) {
+        } else if (ancestor.mark == 2 && judge(node, ancestor.left, ancestor.left.left)) {
             /*ancestor右旋*/
             rRotate(ancestor);
-        } else if (ancestor.factor == -2 && judge(node, ancestor.right, ancestor.right.left)) {
+        } else if (ancestor.mark == -2 && judge(node, ancestor.right, ancestor.right.left)) {
             /*ancestor.right右旋*/
             rRotate(ancestor.right);
             /*ancestor.左旋*/
             lRotate(ancestor);
-            ancestor.parent.right.factor = height(ancestor.parent.right.left) - height(ancestor.parent.right.right);
-        } else if (ancestor.factor == 2 && judge(node, ancestor.left, ancestor.left.right)) {
+            ancestor.parent.right.mark = height(ancestor.parent.right.left) - height(ancestor.parent.right.right);
+        } else if (ancestor.mark == 2 && judge(node, ancestor.left, ancestor.left.right)) {
             /*ancestor.left左旋*/
             lRotate(ancestor.left);
             /*ancestor.右旋*/
             rRotate(ancestor);
-            ancestor.parent.left.factor = height(ancestor.parent.left.left) - height(ancestor.parent.left.right);
+            ancestor.parent.left.mark = height(ancestor.parent.left.left) - height(ancestor.parent.left.right);
         }
-        ancestor.factor = height(ancestor.left) - height(ancestor.right);
-        ancestor.parent.factor = height(ancestor.parent.left) - height(ancestor.parent.right);
+        ancestor.mark = height(ancestor.left) - height(ancestor.right);
+        ancestor.parent.mark = height(ancestor.parent.left) - height(ancestor.parent.right);
     }
 
     int height(Node<K, V> node) {
@@ -307,19 +307,19 @@ public class BalancedBinarySearchTree<K, V> extends AbstractBinarySearchTree<K, 
         }
         while (parent != null) {
             if (node == parent.left) {
-                parent.factor = parent.factor + 1;
-                if (parent.factor == 2) {
+                parent.mark = parent.mark + 1;
+                if (parent.mark == 2) {
                     return parent;
                 }
             }
             if (node == parent.right) {
-                parent.factor = parent.factor - 1;
-                if (parent.factor == -2) {
+                parent.mark = parent.mark - 1;
+                if (parent.mark == -2) {
                     return parent;
                 }
             }
             /*说明parent左右子树相差高度相差1，新增的节点刚好让左右子树相等，因此parent的祖先不再改变factor*/
-            if (parent.factor == 0) {
+            if (parent.mark == 0) {
                 break;
             }
             node = parent;
@@ -334,7 +334,7 @@ public class BalancedBinarySearchTree<K, V> extends AbstractBinarySearchTree<K, 
     public void checkFactor() {
         Node<K, V> node = this.getMin();
         while (node != null) {
-            if (node.factor > 1 || node.factor < -1 || node.factor != (height(node.left) - height(node.right))) {
+            if (node.mark > 1 || node.mark < -1 || node.mark != (height(node.left) - height(node.right))) {
                 throw new IllegalArgumentException();
             }
             node = this.successor(node);
