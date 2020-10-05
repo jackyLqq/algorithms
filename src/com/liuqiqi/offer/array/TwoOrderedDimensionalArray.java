@@ -1,4 +1,4 @@
-package com.liuqiqi.offer;
+package com.liuqiqi.offer.array;
 
 /**
  * @author liuqiqi
